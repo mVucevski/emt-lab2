@@ -11,8 +11,8 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-//@Table(name="videogames")
-//@Where(clause = "deleted=false")
+@Table(name="videogames")
+@Where(clause = "deleted=false")
 public class VideoGame extends AbstractEntity<VideoGameId> {
 
     @EmbeddedId
@@ -21,14 +21,14 @@ public class VideoGame extends AbstractEntity<VideoGameId> {
     @Version
     private Long version;
 
-    //@Column(name="name", nullable = false)
+    @Column(name="name", nullable = false)
     private String name;
 
     @Embedded
-//    @AttributeOverrides({
-//            @AttributeOverride(name="amount", column = @Column(name="amount")),
-//            @AttributeOverride(name="currency", column=@Column(name="currency"))
-//    })
+    @AttributeOverrides({
+            @AttributeOverride(name="amount", column = @Column(name="amount")),
+            @AttributeOverride(name="currency", column=@Column(name="currency"))
+    })
     private Money price;
 
     private int quantity;
@@ -41,6 +41,7 @@ public class VideoGame extends AbstractEntity<VideoGameId> {
 
     public VideoGame(VideoGameId id, String name, Money price, int quantity) {
         super(id);
+        this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;

@@ -3,10 +3,12 @@ package mk.ukim.finki.emt.lab.sharedkernel.domain.base;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
 
+import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 import java.util.UUID;
 
 @Getter
+@MappedSuperclass
 public class DomainObjectId implements ValueObject{
 
     private String id;

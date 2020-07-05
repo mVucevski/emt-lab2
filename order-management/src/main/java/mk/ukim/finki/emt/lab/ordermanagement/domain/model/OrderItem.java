@@ -7,23 +7,21 @@ import mk.ukim.finki.emt.lab.sharedkernel.domain.base.DomainObjectId;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.financial.Money;
 import org.springframework.lang.NonNull;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-//@Table(name="order_items")
+@Table(name="order_items")
 @Getter
 public class OrderItem extends AbstractEntity<OrderItemId> {
 
     @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "id", column = @Column(name = "videoGameId", nullable = false)))
     private VideoGameId videoGameId;
 
     @Embedded
     private Money itemPrice;
 
-    //@Column(name = "qty", nullable = false)
+    @Column(name = "qty", nullable = false)
     private int quantity;
 
     protected OrderItem(){}

@@ -24,9 +24,9 @@ class VideoGameCatalogClient implements VideoGameCatalog {
     private final RestTemplate restTemplate;
     private final String serverUrl;
 
-    VideoGameCatalogClient(@Value("${app.product-catalog.url}") String serverUrl,
-                         @Value("${app.product-catalog.connect-timeout-ms}") int connectTimeout,
-                         @Value("${app.product-catalog.read-timeout-ms}") int readTimeout) {
+    VideoGameCatalogClient(@Value("${app.videogame-catalog.url}") String serverUrl,
+                         @Value("${app.videogame-catalog.connect-timeout-ms}") int connectTimeout,
+                         @Value("${app.videogame-catalog.read-timeout-ms}") int readTimeout) {
         this.serverUrl = serverUrl;
         restTemplate = new RestTemplate();
         var requestFactory = new SimpleClientHttpRequestFactory();

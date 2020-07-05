@@ -3,7 +3,7 @@ package mk.ukim.finki.emt.lab.ordermanagement.application;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.OrderForm;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.RecipientAddressForm;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderItemAdded;
-import mk.ukim.finki.emt.lab.ordermanagement.domain.events.OrderCreated;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderCreated;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.Order;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderId;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.repository.OrderRepository;

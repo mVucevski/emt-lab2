@@ -19,31 +19,31 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Entity
-//@Table(name = "orders")
+@Table(name = "orders")
 @Getter
 public class Order extends AbstractEntity<OrderId> {
 
     @Version
     private Long version;
 
-    //@Column(name = "ordered_on", nullable = false)
+    @Column(name = "ordered_on", nullable = false)
     private Instant orderedOn;
 
-    //@Column(name = "order_currency", nullable = false)
+    @Column(name = "order_currency", nullable = false)
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    //@Column(name = "order_state", nullable = false)
+    @Column(name = "order_state", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
     @Embedded
-//    @AttributeOverrides({
-//            @AttributeOverride(name = "name", column = @Column(name = "billing_name", nullable = false)),
-//            @AttributeOverride(name = "address", column = @Column(name = "billing_address", nullable = false)),
-//            @AttributeOverride(name = "city", column = @Column(name = "billing_city", nullable = false)),
-//            @AttributeOverride(name = "country", column = @Column(name = "billing_country", nullable = false))
-//    })
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "billing_name", nullable = false)),
+            @AttributeOverride(name = "address", column = @Column(name = "billing_address", nullable = false)),
+            @AttributeOverride(name = "city", column = @Column(name = "billing_city", nullable = false)),
+            @AttributeOverride(name = "country", column = @Column(name = "billing_country", nullable = false))
+    })
     private RecipientAddress billingAddress;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
