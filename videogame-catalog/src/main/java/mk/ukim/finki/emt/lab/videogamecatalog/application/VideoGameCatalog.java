@@ -37,6 +37,9 @@ public class VideoGameCatalog {
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void onOrderCreatedEvent(OrderItemAddedEvent event) {
+
+        System.out.println("onOrderCreatedEvent CALLED!");
+
         VideoGame p = VideoGameRepository.findById(event.getProductId()).orElseThrow(RuntimeException::new);
         p.subtractQuantity(event.getQuantity());
         VideoGameRepository.save(p);

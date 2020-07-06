@@ -23,11 +23,11 @@ public class VideogameCatalogApplication {
         SpringApplication.run(VideogameCatalogApplication.class, args);
     }
 
-//    @Bean
-//    public RemoteEventLogService orderEvents(@Value("http://localhost:8082") String serverUrl,
-//                                             @Value("5000") int connectTimeout,
-//                                             @Value("5000") int readTimeout){
-//
-//        return new RemoteEventLogServiceClient(serverUrl, connectTimeout, readTimeout);
-//    }
+    @Bean
+    public RemoteEventLogService orderEvents(@Value("http://localhost:8082") String serverUrl,
+                                             @Value("5000") int connectTimeout,
+                                             @Value("5000") int readTimeout){
+
+        return new RemoteEventLogServiceClient(serverUrl, connectTimeout, readTimeout);
+    }
 }

@@ -1,21 +1,25 @@
 package mk.ukim.finki.emt.lab.sharedkernel.domain.geo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Data;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.base.ValueObject;
 import org.springframework.lang.NonNull;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
+@Data
 public class CityName implements ValueObject {
 
-    //@Column(name="city_name")
+    @Column(name="city_name")
     private final String name;
 
     //unused
     protected CityName() {this.name="";}
 
-    //@JsonCreator
+    @JsonCreator
     public CityName(@NonNull String name) {
         this.name = Objects.requireNonNull(name, "name must not be null");
     }

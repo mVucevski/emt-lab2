@@ -37,4 +37,12 @@ public class OrderForm implements Serializable {
     public List<OrderItemForm> getItems() {
         return items;
     }
+
+    public void setOrderItems(List<OrderItemForm> list){
+        items = list;
+    }
+
+    public void setBillingAddress(RecipientAddressForm address){
+        billingAddress = address;
+    }
 }
