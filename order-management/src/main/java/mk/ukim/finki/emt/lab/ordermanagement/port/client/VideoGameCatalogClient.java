@@ -30,7 +30,6 @@ class VideoGameCatalogClient implements VideoGameCatalog {
         this.serverUrl = serverUrl;
         restTemplate = new RestTemplate();
         var requestFactory = new SimpleClientHttpRequestFactory();
-        // Never ever do a remote call without a finite timeout!
         requestFactory.setConnectTimeout(connectTimeout);
         requestFactory.setReadTimeout(readTimeout);
         restTemplate.setRequestFactory(requestFactory);

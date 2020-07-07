@@ -32,6 +32,8 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
         this.itemPrice = itemPrice;
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity cannot be negative");
+        }else if(quantity > 1){
+            throw new IllegalArgumentException("Max quantity of the same video game in one order is 1.");
         }
 
         this.quantity = quantity;
@@ -48,7 +50,10 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
     public void setQuantity(int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity cannot be negative");
+        }else if(quantity > 1){
+            throw new IllegalArgumentException("Max order quantity of the same video game is 1.");
         }
+
         this.quantity = quantity;
     }
 

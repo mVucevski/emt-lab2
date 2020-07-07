@@ -19,8 +19,8 @@ public class GameKey extends AbstractEntity<GameKeyId> {
     @Version
     private Long version;
 
-    @Column(name="product_key", nullable = false)
-    private String productKey;
+    @Embedded
+    private ProductKey productKey;
 
     @Column(name="owned")
     private boolean owned;
@@ -28,7 +28,7 @@ public class GameKey extends AbstractEntity<GameKeyId> {
     protected GameKey() {
     }
 
-    public GameKey(@NonNull VideoGameId videoGameId, @NonNull String productKey) {
+    public GameKey(@NonNull VideoGameId videoGameId, @NonNull ProductKey productKey) {
         super(DomainObjectId.randomId(GameKeyId.class));
         this.videoGameId = videoGameId;
         this.productKey = productKey;
@@ -43,11 +43,14 @@ public class GameKey extends AbstractEntity<GameKeyId> {
         this.videoGameId = videoGameId;
     }
 
-    public String getProductKey() {
+    public ProductKey getProductKey() {
         return productKey;
     }
 
-    public void setProductKey(String productKey) {
+    public void setProductKey(ProductKey productKey) {
+        if(isOwned())
+            throw new RuntimeException("Can't change product key on already sold product");
+
         this.productKey = productKey;
     }
 

@@ -2,6 +2,7 @@ package mk.ukim.finki.emt.lab.videogamecatalog.domain.model;
 
 import lombok.Getter;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.base.AbstractEntity;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 
@@ -15,8 +16,8 @@ public class Genre extends AbstractEntity<GenreId> {
     @Version
     private Long version;
 
-    @Column(name="name", nullable = false)
-    private String name;
+    @Embedded
+    private GenreName name;
 
     @Column(name="description")
     private String description;
@@ -24,19 +25,22 @@ public class Genre extends AbstractEntity<GenreId> {
     public Genre() {
     }
 
-    public Genre(GenreId id, String name, String description) {
+    public Genre(@NonNull GenreId id, @NonNull GenreName genreName, @NonNull String description) {
         super(id);
         this.id = id;
-        this.name = name;
+        this.name = genreName;
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public void setName(@NonNull String name) {
+        this.name = new GenreName(name);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    public void setId(GenreId id) {
+        this.id = id;
+    }
 }
