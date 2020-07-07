@@ -34,6 +34,9 @@ public class VideoGame extends AbstractEntity<VideoGameId> {
     private int quantity;
 
     private boolean deleted = false;
+    //Will be included in the final version
+    //private String description;
+    //private String imageURL;
 
     public VideoGame(){
 
