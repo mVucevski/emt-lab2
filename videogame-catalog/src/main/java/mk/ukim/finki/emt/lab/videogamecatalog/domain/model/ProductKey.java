@@ -44,6 +44,10 @@ public class ProductKey implements ValueObject {
 
     }
 
+    public boolean hasValidProductKey(){
+        return !productKey.isEmpty();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
