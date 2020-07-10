@@ -16,4 +16,8 @@ public class VideoGame {
     private Money price;
 
     private int quantity;
+
+    private String description;
+
+    private String imageURL;
 }

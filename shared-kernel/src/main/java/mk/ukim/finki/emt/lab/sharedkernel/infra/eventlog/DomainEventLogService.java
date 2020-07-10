@@ -21,6 +21,7 @@ public class DomainEventLogService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
+    //@Transactional(propagation = Propagation.REQUIRED)
     public void append(@NonNull DomainEvent domainEvent) {
         var storedEvent = new StoredDomainEvent(domainEvent, objectMapper);
         storedDomainEventRepository.saveAndFlush(storedEvent);

@@ -59,7 +59,7 @@ public class Order extends AbstractEntity<OrderId> {
         this.items = new HashSet<>();
         setCurrency(currency);
         setOrderedOn(orderedOn);
-        setState(OrderState.RECEIVED);
+        setState(OrderState.PROCESSED);
         setBillingAddress(billingAddress);
     }
 
@@ -69,7 +69,7 @@ public class Order extends AbstractEntity<OrderId> {
         return state;
     }
 
-    private void setState(@NonNull OrderState state) {
+    public void setState(@NonNull OrderState state) {
         this.state = state;
     }
 
@@ -96,6 +96,7 @@ public class Order extends AbstractEntity<OrderId> {
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
+
 
 
     public Money total() {

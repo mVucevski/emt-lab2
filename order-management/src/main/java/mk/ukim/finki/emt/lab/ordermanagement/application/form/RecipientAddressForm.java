@@ -19,6 +19,8 @@ public class RecipientAddressForm implements Serializable {
     private CityName city;
     @NotNull
     private Country country;
+    @NotNull
+    private String eMail;
 
 
 }

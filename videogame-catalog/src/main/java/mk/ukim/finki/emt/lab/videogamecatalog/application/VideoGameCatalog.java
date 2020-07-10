@@ -1,9 +1,10 @@
 package mk.ukim.finki.emt.lab.videogamecatalog.application;
 
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGame;
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGameId;
+import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.*;
+import mk.ukim.finki.emt.lab.videogamecatalog.domain.repository.GameKeyRepository;
 import mk.ukim.finki.emt.lab.videogamecatalog.domain.repository.VideoGameRepository;
 import mk.ukim.finki.emt.lab.videogamecatalog.integration.OrderItemAddedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,15 @@ import java.util.Optional;
 public class VideoGameCatalog {
 
     private final VideoGameRepository VideoGameRepository;
+    private final GameKeyRepository gameKeyRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final GameKeyAddedToOrderEventPublisher gameKeyAddedToOrderEventPublisher;
 
-    public VideoGameCatalog(VideoGameRepository VideoGameRepository) {
+    public VideoGameCatalog(VideoGameRepository VideoGameRepository, GameKeyRepository gameKeyRepository, ApplicationEventPublisher applicationEventPublisher, GameKeyAddedToOrderEventPublisher gameKeyAddedToOrderEventPublisher) {
         this.VideoGameRepository = VideoGameRepository;
+        this.gameKeyRepository = gameKeyRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.gameKeyAddedToOrderEventPublisher = gameKeyAddedToOrderEventPublisher;
     }
 
     @NonNull
@@ -35,13 +42,30 @@ public class VideoGameCatalog {
         return VideoGameRepository.findById(productId);
     }
 
+    @NonNull
+    public Optional<GameKey> findGameKeyById(@NonNull GameKeyId gameKeyId) {
+        Objects.requireNonNull(gameKeyId, "gameKeyId must not be null");
+        return gameKeyRepository.findById(gameKeyId);
+    }
+
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void onOrderCreatedEvent(OrderItemAddedEvent event) {
 
-        System.out.println("onOrderCreatedEvent CALLED!");
+        System.out.println("TransactionalEventListener: onOrderCreatedEvent CALLED!");
 
-        VideoGame p = VideoGameRepository.findById(event.getProductId()).orElseThrow(RuntimeException::new);
-        p.subtractQuantity(event.getQuantity());
-        VideoGameRepository.save(p);
+        VideoGame videoGame = VideoGameRepository.findById(event.getProductId()).orElseThrow(RuntimeException::new);
+        GameKey gameKey = videoGame.findAvailableGameKey();
+        gameKey.setOwned(true);
+        videoGame.subtractQuantity(1);
+        VideoGameRepository.saveAndFlush(videoGame);
+        gameKeyAddedToOrderEventPublisher.onGameKeyAdded(event.getOrderId(), event.getOrderItemId(), gameKey.getId());
     }
+
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void onGameKeyAdded(OrderId orderId, OrderItemId orderItemId, VideoGameId videoGameId, GameKeyId gameKeyId){
+//
+//        applicationEventPublisher.publishEvent(new GameKeyAddedToOrder(orderId,orderItemId,videoGameId,gameKeyId,Instant.now()));
+//        System.out.println("onGameKeyAdded - PUBLISHED NEW EVENT");
+//    }
+
 }

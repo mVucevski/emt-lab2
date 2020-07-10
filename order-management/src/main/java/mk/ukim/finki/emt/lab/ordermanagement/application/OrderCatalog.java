@@ -4,14 +4,17 @@ import mk.ukim.finki.emt.lab.ordermanagement.application.form.OrderForm;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.RecipientAddressForm;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderItemAdded;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderCreated;
-import mk.ukim.finki.emt.lab.ordermanagement.domain.model.Order;
-import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderId;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.model.*;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.repository.OrderRepository;
+import mk.ukim.finki.emt.lab.ordermanagement.integration.GameKeyAddedToOrderEvent;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.geo.RecipientAddress;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -51,7 +54,7 @@ public class OrderCatalog {
 
         var newOrder = orderRepository.saveAndFlush(toDomainModel(order));
         applicationEventPublisher.publishEvent(new OrderCreated(newOrder.id(),newOrder.getOrderedOn()));
-        newOrder.getItems().forEach(orderItem -> applicationEventPublisher.publishEvent(new OrderItemAdded(newOrder.id(),orderItem.id(),orderItem.getVideoGameId(),orderItem.getQuantity(), Instant.now())));
+                newOrder.getItems().forEach(orderItem -> applicationEventPublisher.publishEvent(new OrderItemAdded(newOrder.id(),orderItem.id(),orderItem.getVideoGameId(),orderItem.getQuantity(), Instant.now())));
         return newOrder.id();
     }
 
@@ -71,9 +74,21 @@ public class OrderCatalog {
 
     @NonNull
     private RecipientAddress toDomainModel(@NonNull RecipientAddressForm form) {
-        return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry());
+        return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry(), form.getEMail());
     }
 
+    //@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
+    public void onGameKeyAddedToOrderEvent(GameKeyAddedToOrderEvent event) {
 
+        System.out.println("onGameKeyAddedToOrderEvent - RECEIVED");
+
+        Order order = orderRepository.findById(event.getOrderId()).orElseThrow(RuntimeException::new);
+
+        OrderItem orderItem = order.getItems().filter(e->e.getId().getId().equals(event.getOrderItemId().getId())).findFirst().orElseThrow(RuntimeException::new);
+        orderItem.setGameKeyId(event.getGameKeyId());
+        order.setState(OrderState.RECEIVED);
+        orderRepository.saveAndFlush(order);
+    }
 
 }

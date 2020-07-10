@@ -6,6 +6,7 @@ import mk.ukim.finki.emt.lab.ordermanagement.application.OrderCatalog;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.OrderForm;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.OrderItemForm;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.RecipientAddressForm;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.model.Order;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderId;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.VideoGame;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.VideoGameId;
@@ -32,32 +33,47 @@ public class OrderManagementController {
         this.orderCatalog = orderCatalog;
     }
 
-    @GetMapping
-    //public ResponseEntity<?> createNewOrder(@Valid @RequestBody OrderForm orderForm, BindingResult result) {
-    public String createNewOrder() {
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> findById(@PathVariable("id") String orderId) {
+        return orderCatalog.findById(new OrderId(orderId))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    //Example form:
+    // {"currency":"EUR","billingAddress":{"name":"Miki","address":"dasdasdas","city":{"name":"Skopje"},"country":"MK","email":"miki@gmail.com"},"items":[{"product":{"name":"Far Cry 4","id":{"id":"1"},"price":{"currency":"EUR","amount":30},"quantity":1,"description":null,"imageURL":null},"quantity":1}]}
+    @PostMapping
+    public ResponseEntity<?> createNewOrder(@Valid @RequestBody OrderForm orderForm, BindingResult result) {
+        OrderId newOrderId = orderCatalog.createOrder(orderForm);
+        return new ResponseEntity<OrderId>(newOrderId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/create/test")
+    public String createNewOrderForTesting() {
 
         // Testing...
 
         OrderItemForm orderItemForm = new OrderItemForm();
         VideoGame vg = new VideoGame();
         vg.setId(new VideoGameId("1"));
-        vg.setName("Flashlight L");
-        vg.setPrice(new Money(Currency.MKD, 5642));
-        vg.setQuantity(10);
+        vg.setName("Far Cry 4");
+        vg.setPrice(new Money(Currency.EUR, 30));
+        vg.setQuantity(1);
         orderItemForm.setProduct(vg);
         orderItemForm.setQuantity(1);
         RecipientAddressForm addressForm = new RecipientAddressForm();
-        addressForm.setAddress("dasdasdas");
+        addressForm.setAddress("Nova ulica 2");
         CityName cityName = new CityName("Skopje");
         addressForm.setCity(cityName);
         addressForm.setCountry(Country.MK);
         addressForm.setName("Miki");
+        addressForm.setEMail("miki@gmail.com");
 
         OrderForm orderForm1 = new OrderForm();
         orderForm1.setOrderItems(List.of(orderItemForm));
         orderForm1.setCurrency(Currency.EUR);
         orderForm1.setBillingAddress(addressForm);
-
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -69,7 +85,5 @@ public class OrderManagementController {
 
 
         return "error";
-        //OrderId newOrderId = orderCatalog.createOrder(orderForm1);
-        //return new ResponseEntity<OrderId>(newOrderId, HttpStatus.CREATED);
     }
 }

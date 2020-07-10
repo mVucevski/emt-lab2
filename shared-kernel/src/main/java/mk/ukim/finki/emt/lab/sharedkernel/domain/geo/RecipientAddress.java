@@ -5,6 +5,8 @@ import org.springframework.lang.NonNull;
 
 import javax.persistence.Embeddable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Embeddable
 public class RecipientAddress extends Address {
@@ -12,23 +14,35 @@ public class RecipientAddress extends Address {
     //@Column(name = "recipient_name")
     private String name;
 
-    //priavte FullName fullname;
-    // Ova vo 7dmoto predavanje 97mintuna go pravi
+    private String eMail;
 
     @SuppressWarnings("unused") // Used by JPA only.
     protected RecipientAddress() {
     }
 
     public RecipientAddress(@NonNull String name, @NonNull String address,
-                            @NonNull CityName city, @NonNull Country country) {
+                            @NonNull CityName city, @NonNull Country country, @NonNull String eMail) {
         super(address, city, country);
         this.name = Objects.requireNonNull(name, "name must not be null");
+
+        Objects.requireNonNull(eMail, "E-Mail must not be null");
+        if(!eMail.matches("^.+@.+\\..+$")){
+            throw new RuntimeException("E-Mail must be valid e-mail address");
+        }
+
+        this.eMail = eMail;
     }
 
     @NonNull
     //@JsonProperty("name")
     public String name() {
         return name;
+    }
+
+    @NonNull
+    //@JsonProperty("e_mail")
+    public String geteMail() {
+        return eMail;
     }
 
     @Override
