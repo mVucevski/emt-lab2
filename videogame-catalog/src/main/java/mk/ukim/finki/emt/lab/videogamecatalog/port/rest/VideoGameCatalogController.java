@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/videogames")
 class VideoGameCatalogController {
 
     private final VideoGameCatalog productCatalog;
@@ -20,8 +20,10 @@ class VideoGameCatalogController {
         this.productCatalog = productCatalog;
     }
 
-    // Please note: in a real-world application it would be better to have separate DTO classes that are serialized
-    // to JSON. However, to save time, we're using the entity classes directly in this example.
+    @GetMapping
+    public List<VideoGame> findAll() {
+        return productCatalog.findAll();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<VideoGame> findById(@PathVariable("id") String productId) {
@@ -37,13 +39,8 @@ class VideoGameCatalogController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public List<VideoGame> findAll() {
-        return productCatalog.findAll();
-    }
-
-    @GetMapping("/game-key/event/test")
-    public void testEvent(){
-        productCatalog.onGameKeyAdded(new OrderId("1fcf5e57-082e-433f-b090-081b87348bd6"), new OrderItemId("3bb8eb8a-3e69-4472-a614-be1c22a61a55"), new VideoGameId("1"), new GameKeyId("318dc3a0-9548-4f7b-a836-a32d16370ec1"));
-    }
+//    @GetMapping("/game-key/event/test")
+//    public void testEvent(){
+//        productCatalog.onGameKeyAdded(new OrderId("1fcf5e57-082e-433f-b090-081b87348bd6"), new OrderItemId("3bb8eb8a-3e69-4472-a614-be1c22a61a55"), new VideoGameId("1"), new GameKeyId("318dc3a0-9548-4f7b-a836-a32d16370ec1"));
+//    }
 }

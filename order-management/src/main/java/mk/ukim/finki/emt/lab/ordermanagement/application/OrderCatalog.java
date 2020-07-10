@@ -54,7 +54,7 @@ public class OrderCatalog {
 
         var newOrder = orderRepository.saveAndFlush(toDomainModel(order));
         applicationEventPublisher.publishEvent(new OrderCreated(newOrder.id(),newOrder.getOrderedOn()));
-        newOrder.getItems().forEach(orderItem -> applicationEventPublisher.publishEvent(new OrderItemAdded(newOrder.id(),orderItem.id(),orderItem.getVideoGameId(),orderItem.getQuantity(), Instant.now())));
+                newOrder.getItems().forEach(orderItem -> applicationEventPublisher.publishEvent(new OrderItemAdded(newOrder.id(),orderItem.id(),orderItem.getVideoGameId(),orderItem.getQuantity(), Instant.now())));
         return newOrder.id();
     }
 
@@ -74,7 +74,7 @@ public class OrderCatalog {
 
     @NonNull
     private RecipientAddress toDomainModel(@NonNull RecipientAddressForm form) {
-        return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry());
+        return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry(), form.getEMail());
     }
 
     //@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
@@ -85,13 +85,7 @@ public class OrderCatalog {
 
         Order order = orderRepository.findById(event.getOrderId()).orElseThrow(RuntimeException::new);
 
-//        System.out.println("EVENT OrderItemId: " + event.getOrderItemId());
-//        System.out.println("Order - OrderItems Keys:");
-
-
-        order.getItems().forEach(System.out::println);
         OrderItem orderItem = order.getItems().filter(e->e.getId().getId().equals(event.getOrderItemId().getId())).findFirst().orElseThrow(RuntimeException::new);
-
         orderItem.setGameKeyId(event.getGameKeyId());
         order.setState(OrderState.RECEIVED);
         orderRepository.saveAndFlush(order);

@@ -18,20 +18,19 @@ import java.time.Instant;
 
 @Service
 @Transactional
-public class GameKeySent {
+public class GameKeyAddedToOrderEventPublisher {
 
     private  ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public GameKeySent(ApplicationEventPublisher applicationEventPublisher) {
+    public GameKeyAddedToOrderEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void onGameKeyAdded(OrderId orderId, OrderItemId orderItemId, VideoGameId videoGameId, GameKeyId gameKeyId) {
+    public void onGameKeyAdded(OrderId orderId, OrderItemId orderItemId, GameKeyId gameKeyId) {
 
-        System.out.println("onOrderCreatedEvent - PUBLISHED NEW EVENT");
-        applicationEventPublisher.publishEvent(new GameKeyAddedToOrder(orderId,orderItemId,videoGameId,gameKeyId,Instant.now()));
-
+        System.out.println("GameKeyAddedToOrder: Event Published!");
+        applicationEventPublisher.publishEvent(new GameKeyAddedToOrder(orderId,orderItemId,gameKeyId,Instant.now()));
     }
 }

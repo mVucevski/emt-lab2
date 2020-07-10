@@ -20,9 +20,6 @@ public class GameKeyAddedToOrder implements DomainEvent {
     @JsonProperty("orderItemId")
     private final OrderItemId orderItemId;
 
-    @JsonProperty("productId")
-    private final VideoGameId productId;
-
     @JsonProperty("gameKeyId")
     private final GameKeyId gameKeyId;
 
@@ -31,10 +28,9 @@ public class GameKeyAddedToOrder implements DomainEvent {
 
     @JsonCreator
     public GameKeyAddedToOrder(@JsonProperty("orderId") @NonNull OrderId orderId, @JsonProperty("orderItemId") @NonNull OrderItemId orderItemId,
-                               @JsonProperty("productId") @NonNull VideoGameId productId, @JsonProperty("gameKeyId") @NonNull GameKeyId gameKeyId, @JsonProperty("occurredOn") @NonNull Instant occurredOn) {
+                               @JsonProperty("gameKeyId") @NonNull GameKeyId gameKeyId, @JsonProperty("occurredOn") @NonNull Instant occurredOn) {
         this.orderId = orderId;
         this.orderItemId = orderItemId;
-        this.productId = productId;
         this.occurredOn = occurredOn;
         this.gameKeyId = gameKeyId;
     }

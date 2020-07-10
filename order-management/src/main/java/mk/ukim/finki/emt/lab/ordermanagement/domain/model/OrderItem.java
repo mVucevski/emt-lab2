@@ -75,5 +75,4 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
     }
 
 
-
 }
