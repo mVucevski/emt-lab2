@@ -24,6 +24,10 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
     @Column(name = "qty", nullable = false)
     private int quantity;
 
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "id", column = @Column(name = "gameKeyId")))
+    private GameKeyId gameKeyId;
+
     protected OrderItem(){}
 
     public OrderItem(@NonNull VideoGameId videoGameId, @NonNull Money itemPrice, @NonNull int quantity) {
@@ -35,7 +39,6 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
         }else if(quantity > 1){
             throw new IllegalArgumentException("Max quantity of the same video game in one order is 1.");
         }
-
         this.quantity = quantity;
     }
 
@@ -67,5 +70,8 @@ public class OrderItem extends AbstractEntity<OrderItemId> {
         return itemPrice.multiply(quantity);
     }
 
+    public void setGameKeyId(@NonNull GameKeyId gameKeyId){
+        this.gameKeyId = gameKeyId;
+    }
 
 }

@@ -38,12 +38,32 @@ public class OrderManagementController {
 
         // Testing...
 
+//        OrderItemForm orderItemForm = new OrderItemForm();
+//        VideoGame vg = new VideoGame();
+//        vg.setId(new VideoGameId("1"));
+//        vg.setName("Flashlight L");
+//        vg.setPrice(new Money(Currency.MKD, 5642));
+//        vg.setQuantity(10);
+//        orderItemForm.setProduct(vg);
+//        orderItemForm.setQuantity(1);
+//        RecipientAddressForm addressForm = new RecipientAddressForm();
+//        addressForm.setAddress("dasdasdas");
+//        CityName cityName = new CityName("Skopje");
+//        addressForm.setCity(cityName);
+//        addressForm.setCountry(Country.MK);
+//        addressForm.setName("Miki");
+//
+//        OrderForm orderForm1 = new OrderForm();
+//        orderForm1.setOrderItems(List.of(orderItemForm));
+//        orderForm1.setCurrency(Currency.EUR);
+//        orderForm1.setBillingAddress(addressForm);
+
         OrderItemForm orderItemForm = new OrderItemForm();
         VideoGame vg = new VideoGame();
         vg.setId(new VideoGameId("1"));
-        vg.setName("Flashlight L");
-        vg.setPrice(new Money(Currency.MKD, 5642));
-        vg.setQuantity(10);
+        vg.setName("Far Cry 4");
+        vg.setPrice(new Money(Currency.EUR, 30));
+        vg.setQuantity(2);
         orderItemForm.setProduct(vg);
         orderItemForm.setQuantity(1);
         RecipientAddressForm addressForm = new RecipientAddressForm();
@@ -57,7 +77,6 @@ public class OrderManagementController {
         orderForm1.setOrderItems(List.of(orderItemForm));
         orderForm1.setCurrency(Currency.EUR);
         orderForm1.setBillingAddress(addressForm);
-
 
         try {
             ObjectMapper mapper = new ObjectMapper();

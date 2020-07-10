@@ -1,6 +1,8 @@
 package mk.ukim.finki.emt.lab.videogamecatalog.port.rest;
 
 import mk.ukim.finki.emt.lab.videogamecatalog.application.VideoGameCatalog;
+import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.GameKey;
+import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.GameKeyId;
 import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGame;
 import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGameId;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-class ProductCatalogController {
+class VideoGameCatalogController {
 
     private final VideoGameCatalog productCatalog;
 
-    ProductCatalogController(VideoGameCatalog productCatalog) {
+    VideoGameCatalogController(VideoGameCatalog productCatalog) {
         this.productCatalog = productCatalog;
     }
 
@@ -27,6 +29,13 @@ class ProductCatalogController {
     @GetMapping("/{id}")
     public ResponseEntity<VideoGame> findById(@PathVariable("id") String productId) {
         return productCatalog.findById(new VideoGameId(productId))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/game-key/{gameKeyId}")
+    public ResponseEntity<GameKey> findGameKeyById(@PathVariable("gameKeyId") String gameKeyId) {
+        return productCatalog.findGameKeyById(new GameKeyId(gameKeyId))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

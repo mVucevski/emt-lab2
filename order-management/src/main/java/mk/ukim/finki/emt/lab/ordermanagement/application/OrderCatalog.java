@@ -4,14 +4,16 @@ import mk.ukim.finki.emt.lab.ordermanagement.application.form.OrderForm;
 import mk.ukim.finki.emt.lab.ordermanagement.application.form.RecipientAddressForm;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderItemAdded;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.event.OrderCreated;
-import mk.ukim.finki.emt.lab.ordermanagement.domain.model.Order;
-import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderId;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.model.*;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.repository.OrderRepository;
+import mk.ukim.finki.emt.lab.ordermanagement.integration.GameKeyAddedToOrderEvent;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.geo.RecipientAddress;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -74,6 +76,17 @@ public class OrderCatalog {
         return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry());
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void onGameKeyAddedToOrderEvent(GameKeyAddedToOrderEvent event) {
 
+        System.out.println("onGameKeyAddedToOrderEvent - RECEIVED");
+
+        Order order = orderRepository.findById(event.getOrderId()).orElseThrow(RuntimeException::new);
+        OrderItem orderItem = order.getItems().filter(e->e.getId()==event.getOrderItemId()).findFirst().orElseThrow(RuntimeException::new);
+
+        orderItem.setGameKeyId(event.getGameKeyId());
+        order.setState(OrderState.RECEIVED);
+        orderRepository.saveAndFlush(order);
+    }
 
 }

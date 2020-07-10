@@ -1,6 +1,8 @@
 package mk.ukim.finki.emt.lab.ordermanagement.port.client;
 
 import mk.ukim.finki.emt.lab.ordermanagement.application.VideoGameCatalog;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.model.GameKey;
+import mk.ukim.finki.emt.lab.ordermanagement.domain.model.GameKeyId;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.VideoGame;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.VideoGameId;
 import org.slf4j.Logger;
@@ -56,6 +58,18 @@ class VideoGameCatalogClient implements VideoGameCatalog {
         try {
             return restTemplate.exchange(uri().path("/api/products/"+id.getId()).build().toUri(), HttpMethod.GET, null,
                     new ParameterizedTypeReference<VideoGame>() {
+                    }).getBody();
+        } catch (Exception ex) {
+            LOGGER.error("Error retrieving product by id", ex);
+            return null;
+        }
+    }
+
+    @Override
+    public GameKey findGameKeyById(GameKeyId id) {
+        try {
+            return restTemplate.exchange(uri().path("/api/products/game-key/"+id.getId()).build().toUri(), HttpMethod.GET, null,
+                    new ParameterizedTypeReference<GameKey>() {
                     }).getBody();
         } catch (Exception ex) {
             LOGGER.error("Error retrieving product by id", ex);
