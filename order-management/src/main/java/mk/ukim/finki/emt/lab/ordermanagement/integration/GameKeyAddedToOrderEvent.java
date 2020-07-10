@@ -8,6 +8,7 @@ import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderId;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.OrderItemId;
 import mk.ukim.finki.emt.lab.ordermanagement.domain.model.VideoGameId;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.base.DomainEvent;
+import org.springframework.lang.NonNull;
 
 import java.time.Instant;
 
@@ -16,13 +17,13 @@ public class GameKeyAddedToOrderEvent implements DomainEvent {
     @JsonProperty("orderId")
     private final OrderId orderId;
 
-    @JsonProperty
+    @JsonProperty("orderItemId")
     private final OrderItemId orderItemId;
 
-    @JsonProperty
+    @JsonProperty("productId")
     private final VideoGameId productId;
 
-    @JsonProperty
+    @JsonProperty("gameKeyId")
     private final GameKeyId gameKeyId;
 
     @JsonProperty("occurredOn")
@@ -38,6 +39,7 @@ public class GameKeyAddedToOrderEvent implements DomainEvent {
     }
 
     @Override
+    @NonNull
     public Instant occurredOn() {
         return occurredOn;
     }

@@ -40,7 +40,7 @@ public class GameKeyAddedToOrder implements DomainEvent {
     }
 
     @Override
-    @org.springframework.lang.NonNull
+    @NonNull
     public Instant occurredOn() {
         return occurredOn;
     }

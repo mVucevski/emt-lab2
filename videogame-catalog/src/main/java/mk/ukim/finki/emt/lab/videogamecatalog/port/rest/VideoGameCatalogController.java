@@ -1,10 +1,7 @@
 package mk.ukim.finki.emt.lab.videogamecatalog.port.rest;
 
 import mk.ukim.finki.emt.lab.videogamecatalog.application.VideoGameCatalog;
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.GameKey;
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.GameKeyId;
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGame;
-import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.VideoGameId;
+import mk.ukim.finki.emt.lab.videogamecatalog.domain.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,5 +40,10 @@ class VideoGameCatalogController {
     @GetMapping
     public List<VideoGame> findAll() {
         return productCatalog.findAll();
+    }
+
+    @GetMapping("/game-key/event/test")
+    public void testEvent(){
+        productCatalog.onGameKeyAdded(new OrderId("1fcf5e57-082e-433f-b090-081b87348bd6"), new OrderItemId("3bb8eb8a-3e69-4472-a614-be1c22a61a55"), new VideoGameId("1"), new GameKeyId("318dc3a0-9548-4f7b-a836-a32d16370ec1"));
     }
 }

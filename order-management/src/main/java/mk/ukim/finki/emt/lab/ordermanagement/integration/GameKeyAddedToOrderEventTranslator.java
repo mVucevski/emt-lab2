@@ -19,7 +19,8 @@ public class GameKeyAddedToOrderEventTranslator implements RemoteEventTranslator
 
     @Override
     public boolean supports(StoredDomainEvent storedDomainEvent) {
-        return storedDomainEvent.domainEventClassName().equals("mk.ukim.finki.emt.lab.ordermanagement.integration.GameKeyAddedToOrderEvent");
+        //return storedDomainEvent.domainEventClassName().equals("mk.ukim.finki.emt.lab.ordermanagement.integration.GameKeyAddedToOrderEvent");
+        return storedDomainEvent.domainEventClassName().equals("mk.ukim.finki.emt.lab.videogamecatalog.domain.event.GameKeyAddedToOrder");
     }
 
     @Override

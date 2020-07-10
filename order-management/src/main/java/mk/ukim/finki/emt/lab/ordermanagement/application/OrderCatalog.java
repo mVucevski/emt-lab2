@@ -9,6 +9,7 @@ import mk.ukim.finki.emt.lab.ordermanagement.domain.repository.OrderRepository;
 import mk.ukim.finki.emt.lab.ordermanagement.integration.GameKeyAddedToOrderEvent;
 import mk.ukim.finki.emt.lab.sharedkernel.domain.geo.RecipientAddress;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,13 +77,20 @@ public class OrderCatalog {
         return new RecipientAddress(form.getName(), form.getAddress(),form.getCity(), form.getCountry());
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    //@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
     public void onGameKeyAddedToOrderEvent(GameKeyAddedToOrderEvent event) {
 
         System.out.println("onGameKeyAddedToOrderEvent - RECEIVED");
 
         Order order = orderRepository.findById(event.getOrderId()).orElseThrow(RuntimeException::new);
-        OrderItem orderItem = order.getItems().filter(e->e.getId()==event.getOrderItemId()).findFirst().orElseThrow(RuntimeException::new);
+
+//        System.out.println("EVENT OrderItemId: " + event.getOrderItemId());
+//        System.out.println("Order - OrderItems Keys:");
+
+
+        order.getItems().forEach(System.out::println);
+        OrderItem orderItem = order.getItems().filter(e->e.getId().getId().equals(event.getOrderItemId().getId())).findFirst().orElseThrow(RuntimeException::new);
 
         orderItem.setGameKeyId(event.getGameKeyId());
         order.setState(OrderState.RECEIVED);
